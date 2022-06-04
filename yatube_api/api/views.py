@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 
-from posts.models import Comment, Follow, Group, Post, User
+from posts.models import Comment, Follow, Group, Post
 
 from requests import Response
 
@@ -22,6 +22,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = LimitOffsetPagination
+
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
@@ -69,8 +70,8 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 class FollowViewSet(viewsets.ModelViewSet):
     serializer_class = FollowSerializer
-    permission_classes =  [IsAuthenticated,]
-    filter_backends = [filters.SearchFilter,]
+    permission_classes = [IsAuthenticated, ]
+    filter_backends = [filters.SearchFilter, ]
     search_fields = ['user__username', 'following__username']
 
     def get_queryset(self):
